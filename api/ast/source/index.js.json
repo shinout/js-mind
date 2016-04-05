@@ -1,0 +1,441 @@
+{
+  "type": "Program",
+  "start": 0,
+  "end": 142,
+  "loc": {
+    "start": {
+      "line": 1,
+      "column": 0
+    },
+    "end": {
+      "line": 6,
+      "column": 0
+    }
+  },
+  "sourceType": "module",
+  "body": [
+    {
+      "type": "ExpressionStatement",
+      "start": 0,
+      "end": 13,
+      "loc": {
+        "start": {
+          "line": 1,
+          "column": 0
+        },
+        "end": {
+          "line": 1,
+          "column": 13
+        }
+      },
+      "expression": {
+        "type": "Literal",
+        "start": 0,
+        "end": 12,
+        "loc": {
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 1,
+            "column": 12
+          }
+        },
+        "value": "use strict",
+        "rawValue": "use strict",
+        "raw": "'use strict'"
+      }
+    },
+    {
+      "type": "ExpressionStatement",
+      "start": 15,
+      "end": 52,
+      "loc": {
+        "start": {
+          "line": 3,
+          "column": 0
+        },
+        "end": {
+          "line": 3,
+          "column": 37
+        }
+      },
+      "expression": {
+        "type": "AssignmentExpression",
+        "start": 15,
+        "end": 51,
+        "loc": {
+          "start": {
+            "line": 3,
+            "column": 0
+          },
+          "end": {
+            "line": 3,
+            "column": 36
+          }
+        },
+        "operator": "=",
+        "left": {
+          "type": "MemberExpression",
+          "start": 15,
+          "end": 29,
+          "loc": {
+            "start": {
+              "line": 3,
+              "column": 0
+            },
+            "end": {
+              "line": 3,
+              "column": 14
+            }
+          },
+          "object": {
+            "type": "Identifier",
+            "start": 15,
+            "end": 22,
+            "loc": {
+              "start": {
+                "line": 3,
+                "column": 0
+              },
+              "end": {
+                "line": 3,
+                "column": 7
+              }
+            },
+            "name": "exports"
+          },
+          "property": {
+            "type": "Identifier",
+            "start": 23,
+            "end": 29,
+            "loc": {
+              "start": {
+                "line": 3,
+                "column": 8
+              },
+              "end": {
+                "line": 3,
+                "column": 14
+              }
+            },
+            "name": "layers"
+          },
+          "computed": false
+        },
+        "right": {
+          "type": "CallExpression",
+          "start": 32,
+          "end": 51,
+          "loc": {
+            "start": {
+              "line": 3,
+              "column": 17
+            },
+            "end": {
+              "line": 3,
+              "column": 36
+            }
+          },
+          "callee": {
+            "type": "Identifier",
+            "start": 32,
+            "end": 39,
+            "loc": {
+              "start": {
+                "line": 3,
+                "column": 17
+              },
+              "end": {
+                "line": 3,
+                "column": 24
+              }
+            },
+            "name": "require"
+          },
+          "arguments": [
+            {
+              "type": "Literal",
+              "start": 40,
+              "end": 50,
+              "loc": {
+                "start": {
+                  "line": 3,
+                  "column": 25
+                },
+                "end": {
+                  "line": 3,
+                  "column": 35
+                }
+              },
+              "value": "./layers",
+              "rawValue": "./layers",
+              "raw": "'./layers'"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "ExpressionStatement",
+      "start": 53,
+      "end": 92,
+      "loc": {
+        "start": {
+          "line": 4,
+          "column": 0
+        },
+        "end": {
+          "line": 4,
+          "column": 39
+        }
+      },
+      "expression": {
+        "type": "AssignmentExpression",
+        "start": 53,
+        "end": 91,
+        "loc": {
+          "start": {
+            "line": 4,
+            "column": 0
+          },
+          "end": {
+            "line": 4,
+            "column": 38
+          }
+        },
+        "operator": "=",
+        "left": {
+          "type": "MemberExpression",
+          "start": 53,
+          "end": 68,
+          "loc": {
+            "start": {
+              "line": 4,
+              "column": 0
+            },
+            "end": {
+              "line": 4,
+              "column": 15
+            }
+          },
+          "object": {
+            "type": "Identifier",
+            "start": 53,
+            "end": 60,
+            "loc": {
+              "start": {
+                "line": 4,
+                "column": 0
+              },
+              "end": {
+                "line": 4,
+                "column": 7
+              }
+            },
+            "name": "exports"
+          },
+          "property": {
+            "type": "Identifier",
+            "start": 61,
+            "end": 68,
+            "loc": {
+              "start": {
+                "line": 4,
+                "column": 8
+              },
+              "end": {
+                "line": 4,
+                "column": 15
+              }
+            },
+            "name": "Network"
+          },
+          "computed": false
+        },
+        "right": {
+          "type": "CallExpression",
+          "start": 71,
+          "end": 91,
+          "loc": {
+            "start": {
+              "line": 4,
+              "column": 18
+            },
+            "end": {
+              "line": 4,
+              "column": 38
+            }
+          },
+          "callee": {
+            "type": "Identifier",
+            "start": 71,
+            "end": 78,
+            "loc": {
+              "start": {
+                "line": 4,
+                "column": 18
+              },
+              "end": {
+                "line": 4,
+                "column": 25
+              }
+            },
+            "name": "require"
+          },
+          "arguments": [
+            {
+              "type": "Literal",
+              "start": 79,
+              "end": 90,
+              "loc": {
+                "start": {
+                  "line": 4,
+                  "column": 26
+                },
+                "end": {
+                  "line": 4,
+                  "column": 37
+                }
+              },
+              "value": "./network",
+              "rawValue": "./network",
+              "raw": "'./network'"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "ExpressionStatement",
+      "start": 93,
+      "end": 141,
+      "loc": {
+        "start": {
+          "line": 5,
+          "column": 0
+        },
+        "end": {
+          "line": 5,
+          "column": 48
+        }
+      },
+      "expression": {
+        "type": "AssignmentExpression",
+        "start": 93,
+        "end": 140,
+        "loc": {
+          "start": {
+            "line": 5,
+            "column": 0
+          },
+          "end": {
+            "line": 5,
+            "column": 47
+          }
+        },
+        "operator": "=",
+        "left": {
+          "type": "MemberExpression",
+          "start": 93,
+          "end": 112,
+          "loc": {
+            "start": {
+              "line": 5,
+              "column": 0
+            },
+            "end": {
+              "line": 5,
+              "column": 19
+            }
+          },
+          "object": {
+            "type": "Identifier",
+            "start": 93,
+            "end": 100,
+            "loc": {
+              "start": {
+                "line": 5,
+                "column": 0
+              },
+              "end": {
+                "line": 5,
+                "column": 7
+              }
+            },
+            "name": "exports"
+          },
+          "property": {
+            "type": "Identifier",
+            "start": 101,
+            "end": 112,
+            "loc": {
+              "start": {
+                "line": 5,
+                "column": 8
+              },
+              "end": {
+                "line": 5,
+                "column": 19
+              }
+            },
+            "name": "mnistLoader"
+          },
+          "computed": false
+        },
+        "right": {
+          "type": "CallExpression",
+          "start": 115,
+          "end": 140,
+          "loc": {
+            "start": {
+              "line": 5,
+              "column": 22
+            },
+            "end": {
+              "line": 5,
+              "column": 47
+            }
+          },
+          "callee": {
+            "type": "Identifier",
+            "start": 115,
+            "end": 122,
+            "loc": {
+              "start": {
+                "line": 5,
+                "column": 22
+              },
+              "end": {
+                "line": 5,
+                "column": 29
+              }
+            },
+            "name": "require"
+          },
+          "arguments": [
+            {
+              "type": "Literal",
+              "start": 123,
+              "end": 139,
+              "loc": {
+                "start": {
+                  "line": 5,
+                  "column": 30
+                },
+                "end": {
+                  "line": 5,
+                  "column": 46
+                }
+              },
+              "value": "./mnist_loader",
+              "rawValue": "./mnist_loader",
+              "raw": "'./mnist_loader'"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

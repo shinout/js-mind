@@ -1,0 +1,2593 @@
+[
+  {
+    "__docId__": 0,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/index.js",
+    "memberof": null,
+    "longname": "src/index.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1,
+    "content": "'use strict';\n\nexports.layers = require('./layers');\nexports.Network = require('./network');\nexports.mnistLoader = require('./mnist_loader');\n"
+  },
+  {
+    "__docId__": 1,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/layers/fully_connected_layer.js",
+    "memberof": null,
+    "longname": "src/layers/fully_connected_layer.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1,
+    "content": "\"use strict\";\n\nlet linearAlgebra = require(\"linear-algebra\")();\nlet Matrix = linearAlgebra.Matrix;\nlet lib = require(\"../lib\");\n\nclass FullyConnectedLayer {\n  constructor(nIn, nOut, opts = {}) {\n    this.nIn = nIn;\n    this.nOut = nOut;\n    this.pDropout = opts.pDropout || (opts.pDropout = 0);\n    this.w = lib.randn(this.nOut, this.nIn).mulEach(1 / Math.sqrt(this.nIn));\n    this.b = lib.randn(this.nOut, 1);\n  }\n\n  setInput(input, inputDropout, miniBatchSize) {\n    let bMask = new Matrix(this.b.ravel().map(v => {\n      let results = [];\n      for (let i = 0; i < miniBatchSize; i++) {\n        results.push(v);\n      }\n      return results;\n    }));\n    this.input = input;\n    this.z = this.w.dot(input).mulEach(1 - this.pDropout).plus(bMask);\n    this.output = this.z.sigmoid();\n    this.yOut = this.output.getArgMax();\n    this.inputDropout = lib.dropoutLayer(inputDropout, this.pDropout);\n    return this.outputDropout = this.w.dot(this.inputDropout).plus(bMask).sigmoid();\n  }\n\n  accuracy(y) {\n    return this.yOut === y;\n  }\n\n  costDelta(y) {\n    return this.outputDropout.minus(y).mul(lib.sigmoidPrime(this.z));\n  }\n\n  update(delta) {\n    this.nb = new Matrix(delta.getSum(1)).trans();\n    return this.nw = delta.dot(this.input.trans());\n  }\n}\n\nmodule.exports = FullyConnectedLayer;\n"
+  },
+  {
+    "__docId__": 2,
+    "kind": "variable",
+    "static": true,
+    "variation": null,
+    "name": "linearAlgebra",
+    "memberof": "src/layers/fully_connected_layer.js",
+    "longname": "src/layers/fully_connected_layer.js~linearAlgebra",
+    "access": null,
+    "export": false,
+    "importPath": "js-mind/src/layers/fully_connected_layer.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 3,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 3,
+    "kind": "variable",
+    "static": true,
+    "variation": null,
+    "name": "Matrix",
+    "memberof": "src/layers/fully_connected_layer.js",
+    "longname": "src/layers/fully_connected_layer.js~Matrix",
+    "access": null,
+    "export": false,
+    "importPath": "js-mind/src/layers/fully_connected_layer.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 4,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 4,
+    "kind": "variable",
+    "static": true,
+    "variation": null,
+    "name": "lib",
+    "memberof": "src/layers/fully_connected_layer.js",
+    "longname": "src/layers/fully_connected_layer.js~lib",
+    "access": null,
+    "export": false,
+    "importPath": "js-mind/src/layers/fully_connected_layer.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 5,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 5,
+    "kind": "class",
+    "static": true,
+    "variation": null,
+    "name": "FullyConnectedLayer",
+    "memberof": "src/layers/fully_connected_layer.js",
+    "longname": "src/layers/fully_connected_layer.js~FullyConnectedLayer",
+    "access": null,
+    "export": false,
+    "importPath": "js-mind/src/layers/fully_connected_layer.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 7,
+    "undocument": true,
+    "interface": false
+  },
+  {
+    "__docId__": 6,
+    "kind": "constructor",
+    "static": false,
+    "variation": null,
+    "name": "constructor",
+    "memberof": "src/layers/fully_connected_layer.js~FullyConnectedLayer",
+    "longname": "src/layers/fully_connected_layer.js~FullyConnectedLayer#constructor",
+    "access": null,
+    "description": null,
+    "lineNumber": 8,
+    "undocument": true,
+    "params": [
+      {
+        "name": "nIn",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "nOut",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "opts",
+        "optional": true,
+        "types": [
+          "{}"
+        ],
+        "defaultRaw": {},
+        "defaultValue": "{}"
+      }
+    ],
+    "generator": false
+  },
+  {
+    "__docId__": 7,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "nIn",
+    "memberof": "src/layers/fully_connected_layer.js~FullyConnectedLayer",
+    "longname": "src/layers/fully_connected_layer.js~FullyConnectedLayer#nIn",
+    "access": null,
+    "description": null,
+    "lineNumber": 9,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 8,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "nOut",
+    "memberof": "src/layers/fully_connected_layer.js~FullyConnectedLayer",
+    "longname": "src/layers/fully_connected_layer.js~FullyConnectedLayer#nOut",
+    "access": null,
+    "description": null,
+    "lineNumber": 10,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 9,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "pDropout",
+    "memberof": "src/layers/fully_connected_layer.js~FullyConnectedLayer",
+    "longname": "src/layers/fully_connected_layer.js~FullyConnectedLayer#pDropout",
+    "access": null,
+    "description": null,
+    "lineNumber": 11,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 10,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "w",
+    "memberof": "src/layers/fully_connected_layer.js~FullyConnectedLayer",
+    "longname": "src/layers/fully_connected_layer.js~FullyConnectedLayer#w",
+    "access": null,
+    "description": null,
+    "lineNumber": 12,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 11,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "b",
+    "memberof": "src/layers/fully_connected_layer.js~FullyConnectedLayer",
+    "longname": "src/layers/fully_connected_layer.js~FullyConnectedLayer#b",
+    "access": null,
+    "description": null,
+    "lineNumber": 13,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 12,
+    "kind": "method",
+    "static": false,
+    "variation": null,
+    "name": "setInput",
+    "memberof": "src/layers/fully_connected_layer.js~FullyConnectedLayer",
+    "longname": "src/layers/fully_connected_layer.js~FullyConnectedLayer#setInput",
+    "access": null,
+    "description": null,
+    "lineNumber": 16,
+    "undocument": true,
+    "params": [
+      {
+        "name": "input",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "inputDropout",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "miniBatchSize",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 13,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "input",
+    "memberof": "src/layers/fully_connected_layer.js~FullyConnectedLayer",
+    "longname": "src/layers/fully_connected_layer.js~FullyConnectedLayer#input",
+    "access": null,
+    "description": null,
+    "lineNumber": 24,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 14,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "z",
+    "memberof": "src/layers/fully_connected_layer.js~FullyConnectedLayer",
+    "longname": "src/layers/fully_connected_layer.js~FullyConnectedLayer#z",
+    "access": null,
+    "description": null,
+    "lineNumber": 25,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 15,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "output",
+    "memberof": "src/layers/fully_connected_layer.js~FullyConnectedLayer",
+    "longname": "src/layers/fully_connected_layer.js~FullyConnectedLayer#output",
+    "access": null,
+    "description": null,
+    "lineNumber": 26,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 16,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "yOut",
+    "memberof": "src/layers/fully_connected_layer.js~FullyConnectedLayer",
+    "longname": "src/layers/fully_connected_layer.js~FullyConnectedLayer#yOut",
+    "access": null,
+    "description": null,
+    "lineNumber": 27,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 17,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "inputDropout",
+    "memberof": "src/layers/fully_connected_layer.js~FullyConnectedLayer",
+    "longname": "src/layers/fully_connected_layer.js~FullyConnectedLayer#inputDropout",
+    "access": null,
+    "description": null,
+    "lineNumber": 28,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 18,
+    "kind": "method",
+    "static": false,
+    "variation": null,
+    "name": "accuracy",
+    "memberof": "src/layers/fully_connected_layer.js~FullyConnectedLayer",
+    "longname": "src/layers/fully_connected_layer.js~FullyConnectedLayer#accuracy",
+    "access": null,
+    "description": null,
+    "lineNumber": 32,
+    "undocument": true,
+    "params": [
+      {
+        "name": "y",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 19,
+    "kind": "method",
+    "static": false,
+    "variation": null,
+    "name": "costDelta",
+    "memberof": "src/layers/fully_connected_layer.js~FullyConnectedLayer",
+    "longname": "src/layers/fully_connected_layer.js~FullyConnectedLayer#costDelta",
+    "access": null,
+    "description": null,
+    "lineNumber": 36,
+    "undocument": true,
+    "params": [
+      {
+        "name": "y",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 20,
+    "kind": "method",
+    "static": false,
+    "variation": null,
+    "name": "update",
+    "memberof": "src/layers/fully_connected_layer.js~FullyConnectedLayer",
+    "longname": "src/layers/fully_connected_layer.js~FullyConnectedLayer#update",
+    "access": null,
+    "description": null,
+    "lineNumber": 40,
+    "undocument": true,
+    "params": [
+      {
+        "name": "delta",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 21,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "nb",
+    "memberof": "src/layers/fully_connected_layer.js~FullyConnectedLayer",
+    "longname": "src/layers/fully_connected_layer.js~FullyConnectedLayer#nb",
+    "access": null,
+    "description": null,
+    "lineNumber": 41,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 22,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/layers/index.js",
+    "memberof": null,
+    "longname": "src/layers/index.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1,
+    "content": "'use strict';\n\nexports.FullyConnectedLayer = require('./fully_connected_layer');\nexports.SoftmaxLayer = require('./softmax_layer');\n"
+  },
+  {
+    "__docId__": 23,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/layers/softmax_layer.js",
+    "memberof": null,
+    "longname": "src/layers/softmax_layer.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1,
+    "content": "\"use strict\";\n\nlet linearAlgebra = require(\"linear-algebra\")();\nlet Matrix = linearAlgebra.Matrix;\nlet lib = require(\"../lib\");\n\nclass SoftmaxLayer {\n  constructor(nIn, nOut, opts = {}) {\n    this.nIn = nIn;\n    this.nOut = nOut;\n    this.pDropout = opts.pDropout || (opts.pDropout = 0);\n    this.w = Matrix.zeros(this.nOut, this.nIn);\n    this.b = Matrix.zeros(this.nOut, 1);\n  }\n\n  setInput(input, inputDropout, miniBatchSize) {\n    let bMask = new Matrix(this.b.ravel().map(v => {\n      let results = [];\n      for (let i = 0; i < miniBatchSize; i++) {\n        results.push(v);\n      }\n      return results;\n    }));\n    this.input = input;\n    this.z = this.w.dot(input).mulEach(1 - this.pDropout).plus(bMask);\n    this.output = this.z.softmax(0);\n    this.yOut = this.output.getArgMax();\n    this.inputDropout = lib.dropoutLayer(inputDropout, this.pDropout);\n    return this.outputDropout = this.w.dot(this.inputDropout).plus(bMask).softmax(0);\n  }\n\n  accuracy(y) {\n    return this.yOut === y;\n  }\n\n  costDelta(y) {\n    return this.outputDropout.minus(y);\n  }\n\n  update(delta) {\n    this.nb = new Matrix(delta.getSum(1)).trans();\n    return this.nw = delta.dot(this.input.trans());\n  }\n}\n\nmodule.exports = SoftmaxLayer;\n"
+  },
+  {
+    "__docId__": 24,
+    "kind": "variable",
+    "static": true,
+    "variation": null,
+    "name": "linearAlgebra",
+    "memberof": "src/layers/softmax_layer.js",
+    "longname": "src/layers/softmax_layer.js~linearAlgebra",
+    "access": null,
+    "export": false,
+    "importPath": "js-mind/src/layers/softmax_layer.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 3,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 25,
+    "kind": "variable",
+    "static": true,
+    "variation": null,
+    "name": "Matrix",
+    "memberof": "src/layers/softmax_layer.js",
+    "longname": "src/layers/softmax_layer.js~Matrix",
+    "access": null,
+    "export": false,
+    "importPath": "js-mind/src/layers/softmax_layer.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 4,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 26,
+    "kind": "variable",
+    "static": true,
+    "variation": null,
+    "name": "lib",
+    "memberof": "src/layers/softmax_layer.js",
+    "longname": "src/layers/softmax_layer.js~lib",
+    "access": null,
+    "export": false,
+    "importPath": "js-mind/src/layers/softmax_layer.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 5,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 27,
+    "kind": "class",
+    "static": true,
+    "variation": null,
+    "name": "SoftmaxLayer",
+    "memberof": "src/layers/softmax_layer.js",
+    "longname": "src/layers/softmax_layer.js~SoftmaxLayer",
+    "access": null,
+    "export": false,
+    "importPath": "js-mind/src/layers/softmax_layer.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 7,
+    "undocument": true,
+    "interface": false
+  },
+  {
+    "__docId__": 28,
+    "kind": "constructor",
+    "static": false,
+    "variation": null,
+    "name": "constructor",
+    "memberof": "src/layers/softmax_layer.js~SoftmaxLayer",
+    "longname": "src/layers/softmax_layer.js~SoftmaxLayer#constructor",
+    "access": null,
+    "description": null,
+    "lineNumber": 8,
+    "undocument": true,
+    "params": [
+      {
+        "name": "nIn",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "nOut",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "opts",
+        "optional": true,
+        "types": [
+          "{}"
+        ],
+        "defaultRaw": {},
+        "defaultValue": "{}"
+      }
+    ],
+    "generator": false
+  },
+  {
+    "__docId__": 29,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "nIn",
+    "memberof": "src/layers/softmax_layer.js~SoftmaxLayer",
+    "longname": "src/layers/softmax_layer.js~SoftmaxLayer#nIn",
+    "access": null,
+    "description": null,
+    "lineNumber": 9,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 30,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "nOut",
+    "memberof": "src/layers/softmax_layer.js~SoftmaxLayer",
+    "longname": "src/layers/softmax_layer.js~SoftmaxLayer#nOut",
+    "access": null,
+    "description": null,
+    "lineNumber": 10,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 31,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "pDropout",
+    "memberof": "src/layers/softmax_layer.js~SoftmaxLayer",
+    "longname": "src/layers/softmax_layer.js~SoftmaxLayer#pDropout",
+    "access": null,
+    "description": null,
+    "lineNumber": 11,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 32,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "w",
+    "memberof": "src/layers/softmax_layer.js~SoftmaxLayer",
+    "longname": "src/layers/softmax_layer.js~SoftmaxLayer#w",
+    "access": null,
+    "description": null,
+    "lineNumber": 12,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 33,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "b",
+    "memberof": "src/layers/softmax_layer.js~SoftmaxLayer",
+    "longname": "src/layers/softmax_layer.js~SoftmaxLayer#b",
+    "access": null,
+    "description": null,
+    "lineNumber": 13,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 34,
+    "kind": "method",
+    "static": false,
+    "variation": null,
+    "name": "setInput",
+    "memberof": "src/layers/softmax_layer.js~SoftmaxLayer",
+    "longname": "src/layers/softmax_layer.js~SoftmaxLayer#setInput",
+    "access": null,
+    "description": null,
+    "lineNumber": 16,
+    "undocument": true,
+    "params": [
+      {
+        "name": "input",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "inputDropout",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "miniBatchSize",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 35,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "input",
+    "memberof": "src/layers/softmax_layer.js~SoftmaxLayer",
+    "longname": "src/layers/softmax_layer.js~SoftmaxLayer#input",
+    "access": null,
+    "description": null,
+    "lineNumber": 24,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 36,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "z",
+    "memberof": "src/layers/softmax_layer.js~SoftmaxLayer",
+    "longname": "src/layers/softmax_layer.js~SoftmaxLayer#z",
+    "access": null,
+    "description": null,
+    "lineNumber": 25,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 37,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "output",
+    "memberof": "src/layers/softmax_layer.js~SoftmaxLayer",
+    "longname": "src/layers/softmax_layer.js~SoftmaxLayer#output",
+    "access": null,
+    "description": null,
+    "lineNumber": 26,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 38,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "yOut",
+    "memberof": "src/layers/softmax_layer.js~SoftmaxLayer",
+    "longname": "src/layers/softmax_layer.js~SoftmaxLayer#yOut",
+    "access": null,
+    "description": null,
+    "lineNumber": 27,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 39,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "inputDropout",
+    "memberof": "src/layers/softmax_layer.js~SoftmaxLayer",
+    "longname": "src/layers/softmax_layer.js~SoftmaxLayer#inputDropout",
+    "access": null,
+    "description": null,
+    "lineNumber": 28,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 40,
+    "kind": "method",
+    "static": false,
+    "variation": null,
+    "name": "accuracy",
+    "memberof": "src/layers/softmax_layer.js~SoftmaxLayer",
+    "longname": "src/layers/softmax_layer.js~SoftmaxLayer#accuracy",
+    "access": null,
+    "description": null,
+    "lineNumber": 32,
+    "undocument": true,
+    "params": [
+      {
+        "name": "y",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 41,
+    "kind": "method",
+    "static": false,
+    "variation": null,
+    "name": "costDelta",
+    "memberof": "src/layers/softmax_layer.js~SoftmaxLayer",
+    "longname": "src/layers/softmax_layer.js~SoftmaxLayer#costDelta",
+    "access": null,
+    "description": null,
+    "lineNumber": 36,
+    "undocument": true,
+    "params": [
+      {
+        "name": "y",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 42,
+    "kind": "method",
+    "static": false,
+    "variation": null,
+    "name": "update",
+    "memberof": "src/layers/softmax_layer.js~SoftmaxLayer",
+    "longname": "src/layers/softmax_layer.js~SoftmaxLayer#update",
+    "access": null,
+    "description": null,
+    "lineNumber": 40,
+    "undocument": true,
+    "params": [
+      {
+        "name": "delta",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 43,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "nb",
+    "memberof": "src/layers/softmax_layer.js~SoftmaxLayer",
+    "longname": "src/layers/softmax_layer.js~SoftmaxLayer#nb",
+    "access": null,
+    "description": null,
+    "lineNumber": 41,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 44,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/lib.js",
+    "memberof": null,
+    "longname": "src/lib.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1,
+    "content": "\"use strict\";\n\nconst linearAlgebra = require(\"linear-algebra\")();\nconst { Matrix } = linearAlgebra;\n\n/**\n * Derivative of the sigmoid function.\n * @param {Matrix} z\n * @return {Matrix} converted matrix with the same nRow, nCol\n */\nexport function sigmoidPrime(z) {\n  return z.sigmoid().mul(z.sigmoid().mulEach(-1).plusEach(1));\n};\n\n/**\n * Return a 10-dimensional unit vector with a 1.0 in the j'th position\n * and zeroes elsewhere.  This is used to convert a digit (0...9)\n * into a corresponding desired output from the neural network.\n * @param {number} j interger: zero to nine\n * @return {Matrix} 10x1\n */\nexport function vectorizedResult(j) {\n  const e = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(i => [0]);\n  e[j] = [1];\n  return new Matrix(e);\n};\n\n/**\n * Randomly drop values from a layer.\n * @param {Matrix} layer\n * @param {number} pDropout probability to drop out value for each element\n * @return {Matrix} converted matrix with the same nRow, nCol\n */\nexport function dropoutLayer(layer, pDropout) {\n  return layer.eleMap(function(elem) {\n    return (Math.random() < pDropout ? 0 : elem);\n  });\n};\n\n/**\n * Return a sample from a normal distribution.\n * @param {number} mu mean\n * @param {number} sigma sd (must be greater than 0)\n * @return {number} sample\n */\nexport function norm(mu, sigma) {\n  const a = 1 - Math.random();\n  const b = 1 - Math.random();\n  const c = Math.sqrt(-2 * Math.log(a));\n  if (0.5 - Math.random() > 0) {\n    return c * Math.sin(Math.PI * 2 * b) * sigma + mu;\n  } else {\n    return c * Math.cos(Math.PI * 2 * b) * sigma + mu;\n  }\n}\n\n/**\n * Return a matrix, all of whose element are sampled from the standard normal distribution.\n * see http://d.hatena.ne.jp/iroiro123/20111210/1323515616\n *\n * @param {number} rows the number of rows\n * @param {number} cols the number of cols\n * @return {Matrix} random matrix\n */\nexport function randn(rows, cols) {\n  const result = new Array(rows);\n  for (let i = 0; i < rows; i++) {\n    result[i] = []\n    for (let j = 0; j < cols; j++) {\n      result[i][j] = norm(0, 1)\n    }\n  }\n  return new Matrix(result);\n}\n"
+  },
+  {
+    "__docId__": 45,
+    "kind": "variable",
+    "static": true,
+    "variation": null,
+    "name": "linearAlgebra",
+    "memberof": "src/lib.js",
+    "longname": "src/lib.js~linearAlgebra",
+    "access": null,
+    "export": false,
+    "importPath": "js-mind/src/lib.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 3,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 46,
+    "kind": "variable",
+    "static": true,
+    "variation": null,
+    "name": "Matrix",
+    "memberof": "src/lib.js",
+    "longname": "src/lib.js~Matrix",
+    "access": null,
+    "export": false,
+    "importPath": "js-mind/src/lib.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 4,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 47,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "sigmoidPrime",
+    "memberof": "src/lib.js",
+    "longname": "src/lib.js~sigmoidPrime",
+    "access": null,
+    "export": true,
+    "importPath": "js-mind/src/lib.js",
+    "importStyle": "{sigmoidPrime}",
+    "description": "Derivative of the sigmoid function.",
+    "lineNumber": 11,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Matrix"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "z",
+        "description": ""
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Matrix"
+      ],
+      "spread": false,
+      "description": "converted matrix with the same nRow, nCol"
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 48,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "vectorizedResult",
+    "memberof": "src/lib.js",
+    "longname": "src/lib.js~vectorizedResult",
+    "access": null,
+    "export": true,
+    "importPath": "js-mind/src/lib.js",
+    "importStyle": "{vectorizedResult}",
+    "description": "Return a 10-dimensional unit vector with a 1.0 in the j'th position\nand zeroes elsewhere.  This is used to convert a digit (0...9)\ninto a corresponding desired output from the neural network.",
+    "lineNumber": 22,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "j",
+        "description": "interger: zero to nine"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Matrix"
+      ],
+      "spread": false,
+      "description": "10x1"
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 49,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "dropoutLayer",
+    "memberof": "src/lib.js",
+    "longname": "src/lib.js~dropoutLayer",
+    "access": null,
+    "export": true,
+    "importPath": "js-mind/src/lib.js",
+    "importStyle": "{dropoutLayer}",
+    "description": "Randomly drop values from a layer.",
+    "lineNumber": 34,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Matrix"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "layer",
+        "description": ""
+      },
+      {
+        "nullable": null,
+        "types": [
+          "number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "pDropout",
+        "description": "probability to drop out value for each element"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Matrix"
+      ],
+      "spread": false,
+      "description": "converted matrix with the same nRow, nCol"
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 50,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "norm",
+    "memberof": "src/lib.js",
+    "longname": "src/lib.js~norm",
+    "access": null,
+    "export": true,
+    "importPath": "js-mind/src/lib.js",
+    "importStyle": "{norm}",
+    "description": "Return a sample from a normal distribution.",
+    "lineNumber": 46,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "mu",
+        "description": "mean"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "sigma",
+        "description": "sd (must be greater than 0)"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "number"
+      ],
+      "spread": false,
+      "description": "sample"
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 51,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "randn",
+    "memberof": "src/lib.js",
+    "longname": "src/lib.js~randn",
+    "access": null,
+    "export": true,
+    "importPath": "js-mind/src/lib.js",
+    "importStyle": "{randn}",
+    "description": "Return a matrix, all of whose element are sampled from the standard normal distribution.\nsee http://d.hatena.ne.jp/iroiro123/20111210/1323515616",
+    "lineNumber": 65,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "rows",
+        "description": "the number of rows"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "cols",
+        "description": "the number of cols"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Matrix"
+      ],
+      "spread": false,
+      "description": "random matrix"
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 52,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/mnist_loader.js",
+    "memberof": null,
+    "longname": "src/mnist_loader.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1,
+    "content": "\"use strict\";\n\nlet _ = require(\"lodash\");\nlet linearAlgebra = require(\"linear-algebra\")();\nlet Matrix = linearAlgebra.Matrix;\n\nlet lib = require(\"./lib\");\n\nlet loadTrainingData = function() {\n  let trainingInput = require(\"../data/training_input\");\n  let trainingOutput = require(\"../data/training_output\");\n  return [trainingInput, trainingOutput];\n};\n\nlet loadValidationData = function() {\n  let validationInput = require(\"../data/validation_input\");\n  let validationOutput = require(\"../data/validation_output\");\n  return [validationInput, validationOutput];\n};\n\nlet loadTestData = function() {\n  let testInput = require(\"../data/test_input\");\n  let testOutput = require(\"../data/test_output\");\n  return [testInput, testOutput];\n};\n\nexports.loadTrainingDataWrapper = function() {\n  let trD = loadTrainingData();\n  let trainingInputs = trD[0].map(x => { return Matrix.reshape(x, 784, 1); });\n  let trainingResults = trD[1].map(y => { return lib.vectorizedResult(y); });\n  let trainingData = _.zip(trainingInputs, trainingResults);\n  return trainingData;\n};\n\nexports.loadValidationDataWrapper = function() {\n  let vaD = loadValidationData();\n  let validationInputs = vaD[0].map(x => { return Matrix.reshape(x, 784, 1); });\n  let validationData = _.zip(validationInputs, vaD[1]);\n  return validationData;\n};\n\nexports.loadTestDataWrapper = function() {\n  let teD = loadTestData();\n  let testInputs = teD[0].map(x => { return Matrix.reshape(x, 784, 1); });\n  let testData = _.zip(testInputs, teD[1]);\n  return testData;\n};\n"
+  },
+  {
+    "__docId__": 53,
+    "kind": "variable",
+    "static": true,
+    "variation": null,
+    "name": "_",
+    "memberof": "src/mnist_loader.js",
+    "longname": "src/mnist_loader.js~_",
+    "access": null,
+    "export": false,
+    "importPath": "js-mind/src/mnist_loader.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 3,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 54,
+    "kind": "variable",
+    "static": true,
+    "variation": null,
+    "name": "linearAlgebra",
+    "memberof": "src/mnist_loader.js",
+    "longname": "src/mnist_loader.js~linearAlgebra",
+    "access": null,
+    "export": false,
+    "importPath": "js-mind/src/mnist_loader.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 4,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 55,
+    "kind": "variable",
+    "static": true,
+    "variation": null,
+    "name": "Matrix",
+    "memberof": "src/mnist_loader.js",
+    "longname": "src/mnist_loader.js~Matrix",
+    "access": null,
+    "export": false,
+    "importPath": "js-mind/src/mnist_loader.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 5,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 56,
+    "kind": "variable",
+    "static": true,
+    "variation": null,
+    "name": "lib",
+    "memberof": "src/mnist_loader.js",
+    "longname": "src/mnist_loader.js~lib",
+    "access": null,
+    "export": false,
+    "importPath": "js-mind/src/mnist_loader.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 7,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 57,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "loadTrainingData",
+    "memberof": "src/mnist_loader.js",
+    "longname": "src/mnist_loader.js~loadTrainingData",
+    "access": null,
+    "export": false,
+    "importPath": "js-mind/src/mnist_loader.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 9,
+    "undocument": true,
+    "params": [],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 58,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "loadValidationData",
+    "memberof": "src/mnist_loader.js",
+    "longname": "src/mnist_loader.js~loadValidationData",
+    "access": null,
+    "export": false,
+    "importPath": "js-mind/src/mnist_loader.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 15,
+    "undocument": true,
+    "params": [],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 59,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "loadTestData",
+    "memberof": "src/mnist_loader.js",
+    "longname": "src/mnist_loader.js~loadTestData",
+    "access": null,
+    "export": false,
+    "importPath": "js-mind/src/mnist_loader.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 21,
+    "undocument": true,
+    "params": [],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 60,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "loadTrainingDataWrapper",
+    "memberof": "src/mnist_loader.js",
+    "longname": "src/mnist_loader.js~loadTrainingDataWrapper",
+    "access": null,
+    "export": false,
+    "importPath": "js-mind/src/mnist_loader.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 27,
+    "undocument": true,
+    "params": [],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 61,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "loadValidationDataWrapper",
+    "memberof": "src/mnist_loader.js",
+    "longname": "src/mnist_loader.js~loadValidationDataWrapper",
+    "access": null,
+    "export": false,
+    "importPath": "js-mind/src/mnist_loader.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 35,
+    "undocument": true,
+    "params": [],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 62,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "loadTestDataWrapper",
+    "memberof": "src/mnist_loader.js",
+    "longname": "src/mnist_loader.js~loadTestDataWrapper",
+    "access": null,
+    "export": false,
+    "importPath": "js-mind/src/mnist_loader.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 42,
+    "undocument": true,
+    "params": [],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 63,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/network.js",
+    "memberof": null,
+    "longname": "src/network.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1,
+    "content": "\"use strict\";\n\nlet _ = require(\"lodash\");\nlet linearAlgebra = require(\"linear-algebra\")();\nlet Matrix = linearAlgebra.Matrix;\nlet lib = require(\"./lib\");\n\nclass Network {\n  constructor(layers) {\n    this.layers = layers;\n  }\n\n  SGD(trainingData, epochs, miniBatchSize, eta, opts = {}) {\n    opts.validationData || (opts.validationData = null);\n    opts.testData || (opts.testData = null);\n    opts.lmbda || (opts.lmbda = 0);\n    let bestValidationAccuracy = 0;\n    let testAccuracy = null;\n\n    for (let j of (function() {\n        let results = [];\n\n        for (let i = 0; i < epochs; i++) {\n            results.push(i);\n        }\n\n        return results;\n    }).apply(this)) {\n      trainingData = _.shuffle(trainingData);\n      let miniBatches = this.createMiniBatches(trainingData, miniBatchSize);\n\n      for (let [i, miniBatch] of miniBatches.entries()) {\n        let iteration = trainingData.length / miniBatchSize * j + i;\n        (iteration % 1000 === 0 ? console.log((\"Training mini-batch number \" + (iteration))) : undefined);\n        this.updateMiniBatch(miniBatch, eta, opts.lmbda, trainingData.length);\n      }\n\n      if (opts.validationData) {\n        let validationAccuracy = this.accuracy(opts.validationData);\n        console.log((\"Epoch \" + (j) + \": validation accuracy \" + (validationAccuracy)));\n\n        if (validationAccuracy >= bestValidationAccuracy) {\n          console.log(\"This is the best validation accuracy to date.\");\n          bestValidationAccuracy = validationAccuracy;\n\n          if (opts.testData) {\n            testAccuracy = this.accuracy(opts.testData);\n            console.log((\"The corresponding test accuracy \" + (testAccuracy)));\n          }\n        }\n      } else if (opts.testData) {\n        testAccuracy = this.accuracy(opts.testData);\n        console.log((\"Epoch \" + (j) + \": test accuracy \" + (testAccuracy)));\n      }\n    }\n\n    console.log(\"Finished training network.\");\n\n    if (opts.validationData) {\n      console.log((\"Best validation accuracy \" + (bestValidationAccuracy)));\n      return (opts.testData ? console.log((\"Corresponding test accuracy \" + (testAccuracy))) : undefined);\n    }\n  }\n\n  createMiniBatches(trainingData, miniBatchSize) {\n    return ((function() {\n        let results = [];\n\n        for (let i = 0, ref = trainingData.length; i < ref; i++) {\n            results.push(i);\n        }\n\n        return results;\n    }).apply(this).filter((_, _i) => {\n      return _i === 0 || _i % (miniBatchSize + 1) === 0;\n    }).map(k => {\n      return trainingData.slice(k, (k + miniBatchSize));\n    }));\n  }\n\n  updateMiniBatch(miniBatch, eta, lmbda, n) {\n    let x = new Matrix(miniBatch.map(([_x, _y]) => { return _x.ravel();})).trans();\n    let y = new Matrix(miniBatch.map(([_x, _y]) => { return _y.ravel();})).trans();\n\n    this.train(x, miniBatch.length);\n    this.backprop(y);\n\n    return (() => {\n      for (let layer of this.layers) {\n        layer.w = layer.w.mulEach(1 - eta * (lmbda / n)).minus((layer.nw.mulEach(eta / miniBatch.length)));\n        layer.b = layer.b.minus(layer.nb.mulEach(eta / miniBatch.length));\n      }\n    })();\n  }\n\n  train(x, miniBatchSize) {\n    let initLayer = this.layers[0];\n    initLayer.setInput(x, x, miniBatchSize);\n\n    return (() => {\n      for (let j of (function() {\n          let results = [];\n\n          for (let i = 1, ref = this.layers.length; i < ref; i++) {\n              results.push(i);\n          }\n\n          return results;\n      }).apply(this)) {\n        let prevLayer = this.layers[j - 1];\n        let layer = this.layers[j];\n        layer.setInput(prevLayer.output, prevLayer.outputDropout, miniBatchSize);\n      }\n    })();\n  }\n\n  backprop(y) {\n    let lastLayer = this.layers[this.layers.length - 1];\n    let delta = lastLayer.costDelta(y);\n    lastLayer.update(delta);\n\n    return (() => {\n      for (let l of (function() {\n          let results = [];\n\n          for (let i = 2, ref = this.layers.length + 1; (2 <= ref ? i < ref : i > ref); (2 <= ref ? i++ : i--)) {\n              results.push(i);\n          }\n\n          return results;\n      }).apply(this)) {\n        let followinglayer = this.layers[this.layers.length - l + 1];\n        let layer = this.layers[this.layers.length - l];\n        delta = followinglayer.w.trans().dot(delta).mul(lib.sigmoidPrime(layer.z));\n        layer.update(delta);\n      }\n    })();\n  }\n\n  accuracy(data) {\n    return _.mean(data.map(([x, y]) => { return this.feedforward(x).accuracy(y); }));\n  }\n\n  feedforward(a) {\n    this.train(a, 1);\n    return this.layers[this.layers.length - 1];\n  }\n\n  test(data) {\n    return this.accuracy(data);\n  }\n\n  predict(inputs) {\n    return inputs.map(x => { return this.feedforward(x).yOut; });\n  }\n}\n\nmodule.exports = Network;\n"
+  },
+  {
+    "__docId__": 64,
+    "kind": "variable",
+    "static": true,
+    "variation": null,
+    "name": "_",
+    "memberof": "src/network.js",
+    "longname": "src/network.js~_",
+    "access": null,
+    "export": false,
+    "importPath": "js-mind/src/network.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 3,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 65,
+    "kind": "variable",
+    "static": true,
+    "variation": null,
+    "name": "linearAlgebra",
+    "memberof": "src/network.js",
+    "longname": "src/network.js~linearAlgebra",
+    "access": null,
+    "export": false,
+    "importPath": "js-mind/src/network.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 4,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 66,
+    "kind": "variable",
+    "static": true,
+    "variation": null,
+    "name": "Matrix",
+    "memberof": "src/network.js",
+    "longname": "src/network.js~Matrix",
+    "access": null,
+    "export": false,
+    "importPath": "js-mind/src/network.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 5,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 67,
+    "kind": "variable",
+    "static": true,
+    "variation": null,
+    "name": "lib",
+    "memberof": "src/network.js",
+    "longname": "src/network.js~lib",
+    "access": null,
+    "export": false,
+    "importPath": "js-mind/src/network.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 6,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 68,
+    "kind": "class",
+    "static": true,
+    "variation": null,
+    "name": "Network",
+    "memberof": "src/network.js",
+    "longname": "src/network.js~Network",
+    "access": null,
+    "export": false,
+    "importPath": "js-mind/src/network.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 8,
+    "undocument": true,
+    "interface": false
+  },
+  {
+    "__docId__": 69,
+    "kind": "constructor",
+    "static": false,
+    "variation": null,
+    "name": "constructor",
+    "memberof": "src/network.js~Network",
+    "longname": "src/network.js~Network#constructor",
+    "access": null,
+    "description": null,
+    "lineNumber": 9,
+    "undocument": true,
+    "params": [
+      {
+        "name": "layers",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "generator": false
+  },
+  {
+    "__docId__": 70,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "layers",
+    "memberof": "src/network.js~Network",
+    "longname": "src/network.js~Network#layers",
+    "access": null,
+    "description": null,
+    "lineNumber": 10,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 71,
+    "kind": "method",
+    "static": false,
+    "variation": null,
+    "name": "SGD",
+    "memberof": "src/network.js~Network",
+    "longname": "src/network.js~Network#SGD",
+    "access": null,
+    "description": null,
+    "lineNumber": 13,
+    "undocument": true,
+    "params": [
+      {
+        "name": "trainingData",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "epochs",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "miniBatchSize",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "eta",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "opts",
+        "optional": true,
+        "types": [
+          "{}"
+        ],
+        "defaultRaw": {},
+        "defaultValue": "{}"
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 72,
+    "kind": "method",
+    "static": false,
+    "variation": null,
+    "name": "createMiniBatches",
+    "memberof": "src/network.js~Network",
+    "longname": "src/network.js~Network#createMiniBatches",
+    "access": null,
+    "description": null,
+    "lineNumber": 65,
+    "undocument": true,
+    "params": [
+      {
+        "name": "trainingData",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "miniBatchSize",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 73,
+    "kind": "method",
+    "static": false,
+    "variation": null,
+    "name": "updateMiniBatch",
+    "memberof": "src/network.js~Network",
+    "longname": "src/network.js~Network#updateMiniBatch",
+    "access": null,
+    "description": null,
+    "lineNumber": 81,
+    "undocument": true,
+    "params": [
+      {
+        "name": "miniBatch",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "eta",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "lmbda",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "n",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 74,
+    "kind": "method",
+    "static": false,
+    "variation": null,
+    "name": "train",
+    "memberof": "src/network.js~Network",
+    "longname": "src/network.js~Network#train",
+    "access": null,
+    "description": null,
+    "lineNumber": 96,
+    "undocument": true,
+    "params": [
+      {
+        "name": "x",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "miniBatchSize",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 75,
+    "kind": "method",
+    "static": false,
+    "variation": null,
+    "name": "backprop",
+    "memberof": "src/network.js~Network",
+    "longname": "src/network.js~Network#backprop",
+    "access": null,
+    "description": null,
+    "lineNumber": 117,
+    "undocument": true,
+    "params": [
+      {
+        "name": "y",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 76,
+    "kind": "method",
+    "static": false,
+    "variation": null,
+    "name": "accuracy",
+    "memberof": "src/network.js~Network",
+    "longname": "src/network.js~Network#accuracy",
+    "access": null,
+    "description": null,
+    "lineNumber": 140,
+    "undocument": true,
+    "params": [
+      {
+        "name": "data",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 77,
+    "kind": "method",
+    "static": false,
+    "variation": null,
+    "name": "feedforward",
+    "memberof": "src/network.js~Network",
+    "longname": "src/network.js~Network#feedforward",
+    "access": null,
+    "description": null,
+    "lineNumber": 144,
+    "undocument": true,
+    "params": [
+      {
+        "name": "a",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 78,
+    "kind": "method",
+    "static": false,
+    "variation": null,
+    "name": "test",
+    "memberof": "src/network.js~Network",
+    "longname": "src/network.js~Network#test",
+    "access": null,
+    "description": null,
+    "lineNumber": 149,
+    "undocument": true,
+    "params": [
+      {
+        "name": "data",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 79,
+    "kind": "method",
+    "static": false,
+    "variation": null,
+    "name": "predict",
+    "memberof": "src/network.js~Network",
+    "longname": "src/network.js~Network#predict",
+    "access": null,
+    "description": null,
+    "lineNumber": 153,
+    "undocument": true,
+    "params": [
+      {
+        "name": "inputs",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 81,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Infinity",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Infinity",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Infinity",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 82,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "NaN",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NaN",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~NaN",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 83,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "undefined",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~undefined",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 84,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "null",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/null",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~null",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 85,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Object",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Object",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 86,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "object",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~object",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 87,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Function",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Function",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 88,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "function",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~function",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 89,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Boolean",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Boolean",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 90,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "boolean",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~boolean",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 91,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Symbol",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Symbol",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 92,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Error",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Error",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 93,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "EvalError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/EvalError",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~EvalError",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 94,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "InternalError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/InternalError",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~InternalError",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 95,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "RangeError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RangeError",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~RangeError",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 96,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "ReferenceError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ReferenceError",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~ReferenceError",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 97,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "SyntaxError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SyntaxError",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~SyntaxError",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 98,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "TypeError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypeError",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~TypeError",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 99,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "URIError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/URIError",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~URIError",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 100,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Number",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Number",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 101,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "number",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~number",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 102,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Date",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Date",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 103,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "String",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~String",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 104,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "string",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~string",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 105,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "RegExp",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~RegExp",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 106,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 107,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Int8Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int8Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Int8Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 108,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Uint8Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Uint8Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 109,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Uint8ClampedArray",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8ClampedArray",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Uint8ClampedArray",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 110,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Int16Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int16Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Int16Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 111,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Uint16Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint16Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Uint16Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 112,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Int32Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Int32Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 113,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Uint32Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint32Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Uint32Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 114,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Float32Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Float32Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 115,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Float64Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Float64Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 116,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Map",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Map",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 117,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Set",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Set",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 118,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "WeakMap",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~WeakMap",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 119,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "WeakSet",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakSet",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~WeakSet",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 120,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "ArrayBuffer",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~ArrayBuffer",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 121,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "DataView",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DataView",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~DataView",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 122,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "JSON",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~JSON",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 123,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Promise",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Promise",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 124,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Generator",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Generator",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Generator",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 125,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "GeneratorFunction",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/GeneratorFunction",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~GeneratorFunction",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 126,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Reflect",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Reflect",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Reflect",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 127,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Proxy",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Proxy",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 129,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "CanvasRenderingContext2D",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "longname": "BuiltinExternal/WebAPIExternal.js~CanvasRenderingContext2D",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 130,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "DocumentFragment",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/DocumentFragment",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "longname": "BuiltinExternal/WebAPIExternal.js~DocumentFragment",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 131,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Element",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/Element",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "longname": "BuiltinExternal/WebAPIExternal.js~Element",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 132,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Event",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/Event",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "longname": "BuiltinExternal/WebAPIExternal.js~Event",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 133,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Node",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/Node",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "longname": "BuiltinExternal/WebAPIExternal.js~Node",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 134,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "NodeList",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/NodeList",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "longname": "BuiltinExternal/WebAPIExternal.js~NodeList",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 135,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "XMLHttpRequest",
+    "externalLink": "https://developer.mozilla.org/en/docs/Web/API/XMLHttpRequest",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "longname": "BuiltinExternal/WebAPIExternal.js~XMLHttpRequest",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 136,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "AudioContext",
+    "externalLink": "https://developer.mozilla.org/en/docs/Web/API/AudioContext",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "longname": "BuiltinExternal/WebAPIExternal.js~AudioContext",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  }
+]
